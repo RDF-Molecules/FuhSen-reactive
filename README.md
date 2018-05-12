@@ -25,7 +25,7 @@ MINTE collects data from social networks and other Web sources. Some of these re
 stored in conf/application.conf. The key must be provided before starting MINTE. 
 
 #### IDE support 
-The quick and easy way to start compiling, running and coding FuhSen is to use "activator ui".
+The quick and easy way to start compiling, running and coding MINTE is to use "activator ui".
 However, you can also set up your favorits Java IDE (Eclipse or IntellJ Idea). https://www.playframework.com/documentation/2.4.x/IDE
 
 ### Install and Build
@@ -36,7 +36,7 @@ To obtain the latest version of the project please clone the github repository
 
     $ git clone https://github.com/RDF-Molecules/MINTE.git
 
-The build system for Fuhsen is Sbt. The project can be compiled and run using Sbt or the Typesafe Activator. In order to compile the project with sbt from the project root folder run the command
+The build system for MINTE is Sbt. The project can be compiled and run using Sbt or the Typesafe Activator. In order to compile the project with sbt from the project root folder run the command
 
     $ sbt compile
 
@@ -51,7 +51,7 @@ Before making a build, update the version of the project in the following files:
 ### Install from the Docker image
 A Docker image containing MINTE can be built from the Docker file or pulled from the Lidakra Repository on Docker Hub.
 Once the image has been downloaded or created the configuration file in conf/application.conf must be changed in order to provide
-the keys for the data sources used by Fuhsen and also to update the url of the Silk Workbench.
+the keys for the data sources used by MINTE and also to update the url of the Silk Workbench.
 The config file must be provided in a Docker data volume loaded with the config file. As an example copy the config file in 
 a folder in the server host (e.g. /home/lidakra/application.conf) then run a container using an image
 already available or a small one like alpine (a small Linux version) mapping the config file in the host with the keys to the config file in the container
@@ -77,7 +77,7 @@ From the project root folder run the command
 
     $ sbt start
 
-The Fuhsen server will listen on port 9000.
+The MINTE server will listen on port 9000.
 
 #### Run with Typesafe Activator 
 From the project root folder execute the command "activator ui". The application is going to be compiled and launched 
