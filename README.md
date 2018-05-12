@@ -21,15 +21,15 @@ MINTE depends on the Silk Workbench to transform the data collected from the dat
 An instance of the workbench must be available with the configuration files containing the transformation rules.
 The configuration files for the RDF transformation and all the resources needed to set up an instance of the Silk Workbench are 
 provided in the project [Data Integration Workspace](https://github.com/LiDaKrA/data-integration-workspace).
-Fuhsen collects data from social networks and other data sources. Some of these require a key to use their API that is 
-stored in conf/application.conf. The key must be provided before starting Fuhsen. 
+MINTE collects data from social networks and other Web sources. Some of these require a key to use their API that is 
+stored in conf/application.conf. The key must be provided before starting MINTE. 
 
 #### IDE support 
 The quick and easy way to start compiling, running and coding FuhSen is to use "activator ui".
 However, you can also set up your favorits Java IDE (Eclipse or IntellJ Idea). https://www.playframework.com/documentation/2.4.x/IDE
 
 ### Install and Build
-Fuhsen can be installed from the source code on Github or from the Docker image in the [Lidakra repository](https://hub.docker.com/r/lidakra/)
+MINTE can be installed from the source code on Github or from the Docker image in the [Lidakra repository](https://hub.docker.com/r/lidakra/)
 
 ### Install and build from the source code  
 To obtain the latest version of the project please clone the github repository
@@ -49,7 +49,7 @@ Before making a build, update the version of the project in the following files:
 .travis.yml, build.sbt, Dockerfile, start_fuhsen.sh
 
 ### Install from the Docker image
-A Docker image containing Fuhsen can be built from the Docker file or pulled from the Lidakra Repository on Docker Hub.
+A Docker image containing MINTE can be built from the Docker file or pulled from the Lidakra Repository on Docker Hub.
 Once the image has been downloaded or created the configuration file in conf/application.conf must be changed in order to provide
 the keys for the data sources used by Fuhsen and also to update the url of the Silk Workbench.
 The config file must be provided in a Docker data volume loaded with the config file. As an example copy the config file in 
@@ -60,11 +60,11 @@ already available or a small one like alpine (a small Linux version) mapping the
                                          --name fuhsen-conf alpine /bin/sh
 
 From within the volume container check that the config file is present. Detach from the volume container with Ctrl-p Ctrl-q.
-Start a container with Fuhsen using the config file in the data volume
+Start a container with MINTE using the config file in the data volume
 
     $ docker run -it -p 9000:9000 --volumes-from fuhsen-conf --name fuhsen lidakra/fuhsen:v1.1.0
 
-From within the Fuhsen container check in the /conf folder that the config file is present and up to date and then start Fuhsen
+From within the MINTE container check in the /conf folder that the config file is present and up to date and then start MINTE
 
     #./bin/fuhsen 
 
