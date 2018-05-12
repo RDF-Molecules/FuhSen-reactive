@@ -70,7 +70,7 @@ From within the MINTE container check in the /conf folder that the config file i
 
 
 ### Run
-Fuhsen can be started using Sbt or the Typesafe activator.
+MINTE can be started using Sbt or the Typesafe activator.
 
 #### Run with Sbt
 From the project root folder run the command
