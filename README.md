@@ -1,16 +1,14 @@
-# FuhSen [![Build Status](https://travis-ci.org/LiDaKrA/FuhSen-reactive.svg?branch=master)](https://travis-ci.org/LiDaKrA/FuhSen-reactive)
-
-![Logo](https://cloud.githubusercontent.com/assets/4923203/15185984/39e36d62-1769-11e6-993f-cbe815ded833.png)
-
+# MINTE [![Build Status](https://travis-ci.org/LiDaKrA/FuhSen-reactive.svg?branch=master)](https://travis-ci.org/LiDaKrA/FuhSen-reactive)
 
 ### Description
-Reactive version of the Federated RDF-Based Hybrid Search Engine - **FuhSen**.
+MINTE is a semantic integration technique able to utilize semantics encoded in vocabularies in order to link and fuse semantically equivalent RDF entities in a single step (which we call semantic integration).
 
-### Documentation
-The FuhSen wiki contains video tutorials, class, and interaction diagrams to facilitate the understanding of the FunSen architecture  and to facilitate the extension and resuse of FuhSen.
-https://github.com/LiDaKrA/FuhSen-reactive/wiki
+### Important Note
+Although the source code is well documented, to be easly reusable, MINTE is currently under refactoring not only the source code but the documentation and tutorials as well.
+We plan to finish in the following months!
+
 ### Dependencies
-FuhSen reactive project depends on the following software
+MINTE reactive project depends on the following software
 
 * JDK 1.8
 * Play Web Framework 2.4.6 "Damiya" and Activator 1.3.7
@@ -19,7 +17,7 @@ Download Play: https://www.playframework.com/download
 
 Installation steps: https://www.playframework.com/documentation/2.4.x/Installing
 
-Fuhsen depends on the Silk Workbench to transform the data collected from the data sources into RDF.
+MINTE depends on the Silk Workbench to transform the data collected from the data sources into RDF.
 An instance of the workbench must be available with the configuration files containing the transformation rules.
 The configuration files for the RDF transformation and all the resources needed to set up an instance of the Silk Workbench are 
 provided in the project [Data Integration Workspace](https://github.com/LiDaKrA/data-integration-workspace).
@@ -36,7 +34,7 @@ Fuhsen can be installed from the source code on Github or from the Docker image 
 ### Install and build from the source code  
 To obtain the latest version of the project please clone the github repository
 
-    $ git clone https://github.com/LiDaKrA/FuhSen-reactive.git
+    $ git clone https://github.com/RDF-Molecules/MINTE.git
 
 The build system for Fuhsen is Sbt. The project can be compiled and run using Sbt or the Typesafe Activator. In order to compile the project with sbt from the project root folder run the command
 
@@ -85,19 +83,12 @@ The Fuhsen server will listen on port 9000.
 From the project root folder execute the command "activator ui". The application is going to be compiled and launched 
 at the following address: http://localhost:9000. Once the UI is launched in the browser go to the Run tab and select "Run app".
 
-
-#### Example Usage
-The demo server address is:  http://rdfsearchengine-fuhsen.rhcloud.com/fuhsen/
-
 #### OCCRP SSL Certificate installation
-
 1. Find JAVA_HOME. Its can be found with: readlink -f /usr/bin/java | sed "s:bin/java::"
 2. Copy ./certs/data.occrp.org.cer to JAVA_HOME/jre/lib/security
 3. Go to JAVA_HOME/jre/lib/security and import the certificate into the cacerts keystore
 
-
     $ keytool -importcert -alias occrp -keystore cacerts -storepass changeit -file data.occrp.org.cer -noprompt
-
 
 (The keystore cacerts default password is: changeit)
 
@@ -119,5 +110,3 @@ keytool -delete -alias occrp -keystore cacerts
 
 * Copyright (C) 2015-2018 EIS University of Bonn & Fraunhofer IAIS
 * Licensed under the Apache 2.0 License
-
-
