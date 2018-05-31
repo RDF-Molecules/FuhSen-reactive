@@ -83,30 +83,12 @@ The MINTE server will listen on port 9000.
 From the project root folder execute the command "activator ui". The application is going to be compiled and launched 
 at the following address: http://localhost:9000. Once the UI is launched in the browser go to the Run tab and select "Run app".
 
-#### OCCRP SSL Certificate installation
-1. Find JAVA_HOME. Its can be found with: readlink -f /usr/bin/java | sed "s:bin/java::"
-2. Copy ./certs/data.occrp.org.cer to JAVA_HOME/jre/lib/security
-3. Go to JAVA_HOME/jre/lib/security and import the certificate into the cacerts keystore
-
-    $ keytool -importcert -alias occrp -keystore cacerts -storepass changeit -file data.occrp.org.cer -noprompt
-
-(The keystore cacerts default password is: changeit)
-
-##### In case the certificate expires or gets deprecated, it can be deleted from the keystore ('cacerts' in this example) as follows:
-
-1- First confirm the certificate is in the 'cacerts' keystore: ('occrp' is the alias given when added)
-
-keytool -list -keystore cacerts | grep occrp
-
-2- To delete the certificate from the keystore (cacerts):
-
-keytool -delete -alias occrp -keystore cacerts
-
-3- For confirmation repeat step 1, nothing should be listed as result.
-
-4- The new certificate can be added with the same (or different) alias. (Follow steps 1 to 3 from 'OCCRP SSL Certificate installation')
+#### Live Demo
+A life demo can be found in the following link:
+http://136.243.47.194:59000/fuhsen
 
 #### License
 
 * Copyright (C) 2015-2018 EIS University of Bonn & Fraunhofer IAIS
 * Licensed under the Apache 2.0 License
+
