@@ -11,6 +11,12 @@ We plan to finish in the following months!
 MINTE reactive project depends on the following software
 
 * JDK 1.8
+For Windows 
+- [Add to environment variables java JDK and JRE](https://www.java.com/en/download/help/path.xml)
+- [Download and install sbt SDK from the next](https://www.scala-sbt.org/download.html)
+- Add environment variables
+- If you are using Intellij you should install Scala and sbt plugins before import the project to avoid problems of dependencies.To do that you can check the next link https://www.jetbrains.com/help/idea/installing-updating-and-uninstalling-repository-plugins.html
+
 * Play Web Framework 2.4.6 "Damiya" and Activator 1.3.7
 
 Download Play: https://www.playframework.com/download
