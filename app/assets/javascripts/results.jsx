@@ -84,7 +84,7 @@ var ContainerResults = React.createClass({
                             <div className="row">
                                 <div className="col-md-4">
                                     <a href={context === "" ? "/" : context}>
-                                        <img src={context + "/assets/images/logoBig2.png"} className="smallLogo"
+                                        <img src={context + "/assets/images/minteLogoBig2.png"} className="smallLogo"
                                              alt="Logo_Description"/>
                                     </a>
                                 </div>
@@ -201,18 +201,18 @@ var Container = React.createClass({
 
                 if(err.toString().includes("Not Acceptable")){
                     alert(getTranslation("no_valid_token_found"));
-                    window.location.href = "/fuhsen";
+                    window.location.href = "/minte";
                 }else if(err.toString().includes("timeout")){
                     //alert(getTranslation("timeout"));
                     var r = confirm(getTranslation("timeout"));
                     if (r == true)
                         window.location.reload();
                     else
-                        window.location.href = "/fuhsen";
+                        window.location.href = "/minte";
                 }else{
                     alert(getTranslation("internal_server_error"));
                     //Todo remove this hardcoded value
-                    window.location.href = "/fuhsen";
+                    window.location.href = "/minte";
                 }
             }.bind(this)
             ,timeout: 100000 // sets timeout to 100 seconds
@@ -222,7 +222,7 @@ var Container = React.createClass({
         this.loadCommentsFromServer();
     },
     getInitialState: function () {
-        return {view: "list", entityType: "person", facets: "", initData: false, facetsDict: {}, orgFacetsDict: {}, exactMatching:exact_matching, loadMoreResults:false, mergeData: {1: null, 2: null}, loadMergedData: false};
+        return {view: "list", entityType: "job", facets: "", initData: false, facetsDict: {}, orgFacetsDict: {}, exactMatching:exact_matching, loadMoreResults:false, mergeData: {1: null, 2: null}, loadMergedData: false};
     },
     onExactMatchingChange: function () {
         this.setState({exactMatching:!this.state.exactMatching, loadMoreResults:false, loadMergedData: false})
@@ -243,6 +243,8 @@ var Container = React.createClass({
             type = "website"
         } else if (optionSelected === "5") {
             type = "document"
+        } else if (optionSelected === "6") {
+            type = "job"
         }
         if(type !== this.state.entityType){
             this.setState({entityType: type, facetsDict: {}, orgFacetsDict: {}, loadMoreResults: false, exactMatching: false, loadMergedData: false, mergeData: {1: null, 2: null}});
@@ -1258,7 +1260,7 @@ var ResultsContainer = React.createClass({
           cache: true,
           success: function (data) {
               var stat = {};
-              stat["person"] = stat["organization"] = stat["product"] = stat["website"] = stat["document"] = 0;
+              stat["person"] = stat["organization"] = stat["product"] = stat["website"] = stat["document"] = stat["job"] = 0;
               if (data["@graph"] === undefined && data["http://vocab.lidakra.de/fuhsen#value"] !== undefined)
                   data = JSON.parse("{ \"@graph\": [" + JSON.stringify(data) + "]}");
 
@@ -1271,9 +1273,9 @@ var ResultsContainer = React.createClass({
                   });
               }
               var selectedType = this.state.selected;
-              if(stat["person"] == 0){
+              if(stat["job"] == 0){
                   for(var key in stat){
-                      if(stat.hasOwnProperty(key) && key !== "person" && stat[key] > 0) {
+                      if(stat.hasOwnProperty(key) && key !== "job" && stat[key] > 0) {
                           selectedType = key;
                           this.props.setEntityType(selectedType);
                           break;
@@ -1295,7 +1297,7 @@ var ResultsContainer = React.createClass({
     getInitialState: function () {
         return {
             resultsData: "",
-            selected: "person",
+            selected: "job",
             loading: true,
             underDev: false,
             crawled: false,
@@ -1323,13 +1325,15 @@ var ResultsContainer = React.createClass({
         var personenItem = (this.state.results_stat["person"] > 0 ? <li className="headers-li" onClick={this.props.onTypeChange}
                                data-id="1">{getTranslation("people")+'(' + this.state.results_stat["person"]+ ')'}</li> : null);
         var organizationenItem = (this.state.results_stat["organization"] > 0 ? <li className="headers-li" onClick={this.props.onTypeChange}
-                                     data-id="2">{getTranslation("organisations")+'(' + this.state.results_stat["organization"]+ ')'}</li> : null);
-        var produkteItem = (this.state.results_stat["product"] >0 ? <li className="headers-li" onClick={this.props.onTypeChange}
+                               data-id="2">{getTranslation("organisations")+'(' + this.state.results_stat["organization"]+ ')'}</li> : null);
+        var produkteItem = (this.state.results_stat["product"] > 0 ? <li className="headers-li" onClick={this.props.onTypeChange}
                                data-id="3">{getTranslation("products")+'(' + this.state.results_stat["product"]+ ')'}</li> : null);
         var darkWebItem = (this.state.results_stat["website"] > 0 ? <li className="headers-li" onClick={this.props.onTypeChange}
-                              data-id="4">{getTranslation("tor_websites")+'(' + this.state.results_stat["website"]+ ')'}</li> : null);
-        var documentItem = ( this.state.results_stat["document"] >0 ? <li className="headers-li" onClick={this.props.onTypeChange}
+                               data-id="4">{getTranslation("tor_websites")+'(' + this.state.results_stat["website"]+ ')'}</li> : null);
+        var documentItem = ( this.state.results_stat["document"] > 0 ? <li className="headers-li" onClick={this.props.onTypeChange}
                                data-id="5">{getTranslation("documents")+'(' + this.state.results_stat["document"]+ ')'}</li> : null);
+        var jobItem = ( this.state.results_stat["job"] > 0 ? <li className="headers-li" onClick={this.props.onTypeChange}
+                               data-id="6">{getTranslation("jobs")+'(' + this.state.results_stat["job"]+ ')'}</li> : null);
 
         if (this.state.selected === "person" && personenItem !== null) {
             personenItem = <li className="headers-li" onClick={this.props.onTypeChange} data-id="1"><p>
@@ -1346,6 +1350,9 @@ var ResultsContainer = React.createClass({
         } else if (this.state.selected === "document" && documentItem !== null) {
             documentItem = <li className="headers-li" onClick={this.props.onTypeChange} data-id="5"><p>
                 <b>{getTranslation("documents")+'(' + this.state.results_stat[this.state.selected]+ ')'}</b></p></li>
+        } else if (this.state.selected === "job" && jobItem !== null) {
+            jobItem = <li className="headers-li" onClick={this.props.onTypeChange} data-id="6"><p>
+                <b>{getTranslation("jobs")+'(' + this.state.results_stat[this.state.selected]+ ')'}</b></p></li>
         }
 
         if (this.state.loading) {
@@ -1363,6 +1370,7 @@ var ResultsContainer = React.createClass({
                                 {produkteItem}
                                 {darkWebItem}
                                 {documentItem}
+                                {jobItem}
                             </ul>
                         </div>
                     </div>
@@ -1435,6 +1443,7 @@ var ResultsContainer = React.createClass({
                                     {produkteItem}
                                     {darkWebItem}
                                     {documentItem}
+                                    {jobItem}
                                 </ul>
                                 <SearchMetadataInfo searchUid={this.props.searchUid}/>
                             </div>
@@ -1474,6 +1483,9 @@ var ResultsContainer = React.createClass({
         } else if (this.state.selected === "document" && documentItem !== null) {
             documentItem = <li className="headers-li" onClick={this.props.onTypeChange} data-id="5"><p>
                 <b>{getTranslation("documents")+'(' + stat_text + ')'}</b></p></li>
+        } else if (this.state.selected === "job" && jobItem !== null) {
+            documentItem = <li className="headers-li" onClick={this.props.onTypeChange} data-id="6"><p>
+                <b>{getTranslation("jobs")+'(' + stat_text + ')'}</b></p></li>
         }
 
         if (this.state.underDev) {
@@ -1492,6 +1504,7 @@ var ResultsContainer = React.createClass({
                                 {produkteItem}
                                 {darkWebItem}
                                 {documentItem}
+                                {jobItem}
                             </ul>
                         </div>
                         <div className="col-md-4 text-right">
@@ -1549,6 +1562,7 @@ var ResultsContainer = React.createClass({
                                 {produkteItem}
                                 {darkWebItem}
                                 {documentItem}
+                                {jobItem}
                             </ul>
                             <SearchMetadataInfo searchUid={this.props.searchUid}/>
                         </div>
@@ -1621,7 +1635,7 @@ var ResultsList = React.createClass({
 
         var already_crawled = this.props.crawled;
         var resultsNodes = resultsNodesSorted.map(function (result,idx) {
-            console.log(result);
+            //console.log(result);
             if (result["@type"] === "foaf:Person") {
                 return (
                     <PersonResultElement
@@ -1729,7 +1743,7 @@ var ResultsList = React.createClass({
                     <DocumentResultElement
                         uri = {result["@id"]}
                         label={result["fs:label"]}
-                        comment={result["fs:comment"]}
+                        comment={result["sdo:comment"]}
                         webpage={result.url}
                         country={result["fs:country"]}
                         language={result["fs:language"]}
@@ -1739,6 +1753,22 @@ var ResultsList = React.createClass({
                         onAddLink={this.props.onAddLink}
                         onFavourite={this.props.onFavourite}>
                     </DocumentResultElement>
+                );
+            }
+            else if (result["@type"] === "fs:Job") {
+                return (
+                    <JobResultElement
+                        uri = {result["@id"]}
+                        label={result["fs:label"]}
+                        comment={result["sdo:description"]}
+                        webpage={result.url}
+                        datePosted={result["sdo:datePosted"]}
+                        location={result["sdo:jobLocation"]}
+                        organization={result["sdo:hiringOrganization"]}
+                        source={result["sdo:source"]}
+                        onAddLink={this.props.onAddLink}
+                        onFavourite={this.props.onFavourite}>
+                    </JobResultElement>
                 );
             }
         },this);
@@ -2152,6 +2182,44 @@ var DocumentResultElement = React.createClass({
                                     <p>{getTranslation("language")}: {this.props.language}</p> : null }
                                 { this.props.filename !== undefined ?
                                     <p>{getTranslation("filename")}: {this.props.filename}</p> : null }
+                                <LinkElement webpage={this.props.webpage} />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="thumbnail-wrapper col-md-1">
+                        <div className="thumbnail">
+                            <LinkResultsButton data={this.props} onAddLink={this.props.onAddLink}/>
+                            <FavouritesButton data={this.props.uri} onFavourite={this.props.onFavourite}/>
+                            <SnapshotLink webpage={this.props.webpage}></SnapshotLink>
+                            <img src={context + "/assets/images/datasources/" + this.props.source + ".png"}
+                                 alt={"Information from " + this.props.source} height="45" width="45"
+                                 title={this.props.source}/>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        );
+    }
+});
+
+var JobResultElement = React.createClass({
+    render: function () {
+        return (
+            <li className="item bt">
+                <div className="summary row">
+                    <div className="summary-main-wrapper col-md-10">
+                        <div className="summary-main">
+                            <h2 className="title">
+                                {this.props.label}
+                            </h2>
+                            <div className="subtitle">
+                                { this.props.comment !== undefined ? <p>{this.props.comment}</p> : null }
+                                { this.props.datePosted !== undefined ?
+                                    <p>{getTranslation("datePosted")}: {this.props.datePosted}</p> : null }
+                                { this.props.organization !== undefined ?
+                                    <p>{getTranslation("hiringOrganization")}: {this.props.organization}</p> : null }
+                                { this.props.location !== undefined ?
+                                    <p>{getTranslation("jobLocation")}: {this.props.location}</p> : null }
                                 <LinkElement webpage={this.props.webpage} />
                             </div>
                         </div>

@@ -143,19 +143,22 @@ var SearchForm = React.createClass({
     },
     getInitialState: function() {
         var typesForSource= {};
-        typesForSource["facebook"] = ["person"];
-        typesForSource["twitter"] = ["person"];
+        //typesForSource["facebook"] = ["person"];
+        //typesForSource["twitter"] = ["person"];
         typesForSource["xing"] = ["person"];
-        typesForSource["gplus"] = ["person","organization"];
-        typesForSource["linkedleaks"] = ["person","organization"];
-        typesForSource["gkb"] = ["person","organization"];
-        typesForSource["ebay"] = ["product"];
-        typesForSource["occrp"] = ["document"];
-        typesForSource["tor2web"]  = ["website"];
-        typesForSource["elasticsearch"]  = ["website"];
+        //typesForSource["gplus"] = ["person","organization"];
+        //typesForSource["linkedleaks"] = ["person","organization"];
+        //typesForSource["gkb"] = ["person","organization"];
+        //typesForSource["ebay"] = ["product"];
+        //typesForSource["occrp"] = ["document"];
+        //typesForSource["tor2web"]  = ["website"];
+        //typesForSource["elasticsearch"]  = ["website"];
         //typesForSource["vk"] = ["person"];
         //typesForSource["darknetmarkets"] = ["product"];
         //typesForSource["pipl"] = ["person"];
+        typesForSource["adzuna"]  = ["job"];
+        typesForSource["indeed"]  = ["job"];
+        typesForSource["jooble"]  = ["job"];
 
         return { showSourcesTypesDiv: false, sources: [] , types: [],typesForSource: typesForSource,allowed_types: []};
     },

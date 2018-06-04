@@ -34,7 +34,7 @@ var ContainerSearch = React.createClass({
                     <link rel="stylesheet" media="screen" href={context+"/assets/stylesheets/startPage.css"}>
                         <div className="col-md-12 search-widget">
                             <div>
-                                <img src={context+"/assets/images/imgpsh_fullsize_NoText.png"} className="bigLogo" alt="Logo_Description"/>
+                                <img src={context+"/assets/images/minte.png"} className="bigLogo" alt="Logo_Description"/>
                                 <h1 style={{color: "#456499"} }>{getTranslation("fuhsen")}</h1>
                             </div>
                             <div className="row">
@@ -45,13 +45,13 @@ var ContainerSearch = React.createClass({
                         </div>
                     </link>
                     <div className="row">
-                        <div className="col-md-6 text-center">
+                        {/*<div className="col-md-6 text-center">
                             <AccessTokenForm social_network="facebook" />
                         </div>
-                        {/*<div className="col-md-4 text-center">
+                        <div className="col-md-4 text-center">
                             <AccessTokenForm social_network="vk" />
                         </div>*/}
-                        <div className="col-md-6 text-center">
+                        <div className="col-md-12 text-center">
                             <AccessTokenForm social_network="xing" />
                         </div>
                     </div>

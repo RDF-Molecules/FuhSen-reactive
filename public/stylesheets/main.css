@@ -2075,7 +2075,7 @@ a[href^="http"]:not(.no-external-link-icon):not([href^="http://localhost"]):not(
     height: 65px;
     background-size: 100%;
     opacity: 0.5;
-    background-image: url("../images/LiDaKrA_Logo.jpg");
+    background-image: url("../images/iais_logo.png");
     z-index: 99 !important;
 }
 

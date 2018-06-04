@@ -80,6 +80,7 @@ class SearchEngineController @Inject()(ws: WSClient) extends Controller {
             r =>
               if(!r.body.equals("NO VALID TOKEN")){
 
+                Logger.info("Stored In-Memory Graph: "+r.body)
                 GraphLogger.log(r.body) //Logging data
                 val finalModel = RDFUtil.rdfStringToModel(r.body, Lang.TURTLE)
 
@@ -89,7 +90,9 @@ class SearchEngineController @Inject()(ws: WSClient) extends Controller {
                 GraphResultsCache.saveModel(uid, finalModel)
                 Logger.info("Search results stored in cache: "+uid)
                 //Return sub model by type
-                Ok(RDFUtil.modelToTripleString(getSubModel(entityType, finalModel, exact), Lang.JSONLD))
+                val jldBody = RDFUtil.modelToTripleString(getSubModel(entityType, finalModel, exact), Lang.JSONLD)
+                //Logger.info("JSON-LD Body: "+jldBody)
+                Ok(jldBody)
               }else{
                 NotAcceptable(r.body)
               }
@@ -186,6 +189,13 @@ class SearchEngineController @Inject()(ws: WSClient) extends Controller {
              |    ?type fs:key ?key .
              |    FILTER(?key = "document") .
              |  }
+             |  UNION
+             |  {
+             |    ?s a fs:SearchableEntity .
+             |    ?s rdf:type ?type .
+             |    ?type fs:key ?key .
+             |    FILTER(?key = "job") .
+             |  }
              |}
              |GROUP BY ?type ?key
           """.stripMargin)
@@ -281,6 +291,7 @@ class SearchEngineController @Inject()(ws: WSClient) extends Controller {
   }
 
   private def getSubModel(entityType :String, model :Model, exact :Boolean) : Model = {
+    Logger.info(s"Getting Sub Model entityType: $entityType and exact: $exact")
     val keyword = FuhsenVocab.getKeyword(model).get;
     entityType match {
       case "person" =>
@@ -442,6 +453,32 @@ class SearchEngineController @Inject()(ws: WSClient) extends Controller {
              |OPTIONAL { ?s ?p ?o .
              |     FILTER(isLiteral(?o)) } .
              |OPTIONAL { ?s fs:url ?url } .
+             ${if (exact) {s"""|?s rdfs:label ?exact_name .
+                               |FILTER (lcase(?exact_name) = lcase('$keyword')) .
+                               |}"""}else{s"""|}"""}}""".stripMargin)
+        QueryExecutionFactory.create(query, model).execConstruct()
+      case "job" =>
+        val query = QueryFactory.create(
+          s"""
+             |PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+             |PREFIX fs: <http://vocab.lidakra.de/fuhsen#>
+             |PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+             |PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+             |PREFIX edsa: <http://www.edsa-project.eu/edsa#>
+             |PREFIX sdo: <http://schema.org/>
+             |
+             |CONSTRUCT   {
+             |?s ?p ?o .
+             |?s rdf:type fs:Job .
+             |?s fs:label ?label .
+             |?s sdo:url ?url .
+             |}
+             |WHERE {
+             |?s rdf:type fs:Job .
+             |?s sdo:title ?label .
+             |OPTIONAL { ?s ?p ?o .
+             |     FILTER(isLiteral(?o)) } .
+             |OPTIONAL { ?s sdo:url ?url } .
              ${if (exact) {s"""|?s rdfs:label ?exact_name .
                                |FILTER (lcase(?exact_name) = lcase('$keyword')) .
                                |}"""}else{s"""|}"""}}""".stripMargin)

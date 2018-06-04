@@ -91,6 +91,7 @@ var dictEng = {
     "createCrawlJob": "Crawl it!",
     "documents": "Documents",
     "websites": "Websites",
+    "jobs": "Job Ads",
     "language": "Language",
     "filename": "File name",
     "filetype": "File type",
@@ -113,7 +114,7 @@ var dictEng = {
     "types" : "Types",
     "all" : "all",
     "none" : "none",
-    "fuhsen" : "Federated Hybrid Search",
+    "fuhsen" : "Semantic Molecule-Based Integration Technique",
     "export": "Export",
     "need_help": "Need Help. ",
     "contact": "Send us an e-mail",
@@ -148,7 +149,10 @@ var dictEng = {
     "marketplace" : "Marketplace",
     "category" : "Category",
     "vendor" : "Vendor",
-    "totalRevenue" : "Total Revenue"
+    "totalRevenue" : "Total Revenue",
+    "hiringOrganization" : "Hiring Organization",
+    "datePosted" : "Date Posted",
+    "jobLocation" : "Job Location"
 };
 var dictGer = {
     "resultsfor": "Ergebnisse für",
@@ -250,6 +254,7 @@ var dictGer = {
     "createCrawlJob": "Crawl-Auftrag!",
     "documents": "Dokumente",
     "websites": "Webseiten",
+    "jobs": "Stellenanzeigen",
     "language": "Sprache",
     "filename": "Dateiname",
     "filetype": "Dateityp",
@@ -272,7 +277,7 @@ var dictGer = {
     "types" : "Typen",
     "all" : "alle",
     "none" : "keiner",
-    "fuhsen" : "Föderierte Hybride Suche",
+    "fuhsen" : "Semantische Molekülbasierte Integrationstechnik",
     "export" : "Exportieren",
     "need_help": "Brauchen Sie Hilfe? ",
     "contact": "Nachricht schreiben",
@@ -307,7 +312,10 @@ var dictGer = {
     "marketplace" : "Marktplatz",
     "category" : "Kategorie",
     "vendor" : "Verkäufer",
-    "totalRevenue" : "Gesamtumsatz"
+    "totalRevenue" : "Gesamtumsatz",
+    "hiringOrganization" : "Hiring Organization",
+    "datePosted" : "Date Posted",
+    "jobLocation" : "Job Location"
 };
 
 window.dictGer = dictGer;

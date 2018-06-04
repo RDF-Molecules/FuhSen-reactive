@@ -17,7 +17,6 @@ object GraphLogger {
   def log(graph: String) = {
     if (ConfigFactory.load.getBoolean("fuhsen.logger.messages.enabled"))
       logger.debug(graph)
-
   }
 }
 

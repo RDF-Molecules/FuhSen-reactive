@@ -53,6 +53,7 @@ class FacetsController @Inject()(ws: WSClient) extends Controller {
       case "product" => "gr:ProductOrService"
       case "document" => "fs:Document"
       case "website" => "foaf:Document"
+      case "job" => "fs:Job"
     }
 
     GraphResultsCache.getModel(uid) match {

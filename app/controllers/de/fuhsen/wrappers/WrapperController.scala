@@ -173,8 +173,16 @@ class WrapperController @Inject()(ws: WSClient) extends Controller {
           // There has been an error previously, don't go on.
           Future(error)
         case ApiSuccess(body, nextPage, lastValue) =>
-          //Logger.info("PRE-SILK: "+body)
-          handleSilkTransformation(wrapper, body, nextPage)
+          if(wrapper.sourceLocalName.equals("indeed")){
+            val bodyS = scala.xml.XML.loadString(body.replace("<?xml version='1.0' encoding='UTF-8'?>",""))
+            val p = new scala.xml.PrettyPrinter(80, 4)
+            val bodySF = p.format(bodyS)
+            //Logger.info("PRE-SILK (Indeed): "+bodySF)
+            handleSilkTransformation(wrapper, bodySF, nextPage)
+          } else {
+            //Logger.info("PRE-SILK: "+body)
+            handleSilkTransformation(wrapper, body, nextPage)
+          }
       }
   }
 
@@ -505,7 +513,11 @@ object WrapperController {
     //vk
     new VkWrapper(),
     //darknetmarkets
-    new DarknetMarketsWrapper()
+    new DarknetMarketsWrapper(),
+    //demo wrappers
+    new AdzunaWrapper(),
+    new JoobleWrapper(),
+    new IndeedWrapper()
   )
   val wrapperMap: Map[String, RestApiWrapperTrait] = wrappers.map { wrapper =>
     (wrapper.sourceLocalName, wrapper)
