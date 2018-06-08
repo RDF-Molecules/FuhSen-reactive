@@ -84,8 +84,10 @@ From the project root folder execute the command "activator ui". The application
 at the following address: http://localhost:9000. Once the UI is launched in the browser go to the Run tab and select "Run app".
 
 #### Live Demo
-A life demo can be found in the following link:
-http://136.243.47.194:59000/fuhsen
+A recorded video showing the MINTE demo can be found here:
+https://youtu.be/6bNP21XSu6s
+
+A life demo can be found in the following link: **_Under Construction_**
 
 #### License
 
