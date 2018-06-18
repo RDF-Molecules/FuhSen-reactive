@@ -48,11 +48,11 @@ import scala.concurrent.Future
   * Handles requests to API wrappers. Wrappers must at least implement [[RestApiWrapperTrait]].
   * Depending on implemented traits also does transformation, linking and merging of entities.
   */
-class WrapperController @Inject()(ws: WSClient) extends Controller {
+class WrapperController @Inject()(ws: WSClient, wm: WrapperManager) extends Controller {
   val requestCounter = new AtomicInteger(0)
 
   def search(wrapperId: String, query: String) = Action.async { request =>
-    WrapperController.wrapperMap.get(wrapperId) match {
+    wm.wrapperMap.get(wrapperId) match {
       case Some(wrapper) =>
         Logger.info(s"Starting $wrapperId Search with query: " + query)
         execQueryAgainstWrapper(query, wrapper, createWrapperMetaData(request.body)) map {
@@ -63,7 +63,7 @@ class WrapperController @Inject()(ws: WSClient) extends Controller {
         }
       case None =>
         Future(NotFound("Wrapper " + wrapperId + " not found! Supported wrapper: " +
-          WrapperController.sortedWrapperIds.mkString(", ")))
+          wm.sortedWrapperIds.mkString(", ")))
     }
   }
 
@@ -195,10 +195,10 @@ class WrapperController @Inject()(ws: WSClient) extends Controller {
 
   def searchMultiple(query: String, wrapperIds: String) = Action.async { request =>
     Logger.info("Starting search multiple: "+query+" "+wrapperIds)
-    val wrappers = (wrapperIds.split(",") map WrapperController.wrapperMap.get).toSeq
+    val wrappers = (wrapperIds.split(",") map wm.wrapperMap.get).toSeq
     if (wrappers.exists(_.isEmpty)) {
       Future(BadRequest("Invalid wrapper requested! Supported wrappers: " +
-        WrapperController.sortedWrapperIds.mkString(", ")))
+        wm.sortedWrapperIds.mkString(", ")))
     } else {
       val requestMerger = new RequestMerger()
       val resultFutures = wrappers.flatten map (wrapper => execQueryAgainstWrapper(query, wrapper, createWrapperMetaData(request.body)))
@@ -473,7 +473,7 @@ class WrapperController @Inject()(ws: WSClient) extends Controller {
   // Return all wrapper ids as a JSON list
   def wrapperIds() = {
     Action {
-      Ok(JsArray(WrapperController.sortedWrapperIds.map(id => JsString(id))))
+      Ok(JsArray(wm.sortedWrapperIds.map(id => JsString(id))))
     }
   }
 }
@@ -481,35 +481,43 @@ class WrapperController @Inject()(ws: WSClient) extends Controller {
 /**
   * For now, hard code all available wrappers here. Later this should probably be replaced by a plugin mechanism.
   */
-object WrapperController {
-  val wrappers = Seq(
-    new GooglePlusWrapper(),
-    new TwitterWrapper(),
-    new FacebookWrapper(),
-    //Knowledge base
-    new GoogleKnowledgeGraphWrapper(),
-    //eCommerce
-    new EBayWrapper(),
-    //Darknet
-    new Tor2WebWrapper(),
-    //Linked leaks
-    new LinkedLeaksWrapper(),
-    //OCCRP
-    new OCCRPWrapper(),
-    //Xing
-    new XingWrapper(),
-    //Elastic Search
-    new ElasticSearchWrapper(),
-    //pipl
-    new PiplWrapper(),
-    //vk
-    new VkWrapper(),
-    //darknetmarkets
-    new DarknetMarketsWrapper()
-  )
-  val wrapperMap: Map[String, RestApiWrapperTrait] = wrappers.map { wrapper =>
-    (wrapper.sourceLocalName, wrapper)
-  }.toMap
 
-  val sortedWrapperIds = wrapperMap.keys.toSeq.sortWith(_ < _)
-}
+//object WrapperController {
+//
+//
+////  val wrappers = Seq(
+////    new GooglePlusWrapper(),
+////    new TwitterWrapper(),
+////    new FacebookWrapper(),
+////    //Knowledge base
+////    new GoogleKnowledgeGraphWrapper(),
+////    //eCommerce
+////    new EBayWrapper(),
+////    //Darknet
+////    new Tor2WebWrapper(),
+////    //Linked leaks
+////    new LinkedLeaksWrapper(),
+////    //OCCRP
+////    new OCCRPWrapper(),
+////    //Xing
+////    new XingWrapper(),
+////    //Elastic Searchd
+////    new ElasticSearchWrapper(),
+////    //pipl
+////    new PiplWrapper(),
+////    //vk
+////    new VkWrapper(),
+////    //darknetmarkets
+////    new DarknetMarketsWrapper()
+////  )
+//  println("wrappers")
+//  println(wrappers)
+//  def mappingWrappers (wrappers: Any): Unit = {
+//    val wrapperMap: Map[String, RestApiWrapperTrait] = wrappers.map { wrapper =>
+//      (wrapper.sourceLocalName, wrapper)
+//    }.toMap
+//  }
+//
+//
+//  val sortedWrapperIds = mappingWrappers().keys.toSeq.sortWith(_ < _)
+//}
