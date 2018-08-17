@@ -18,8 +18,8 @@ package controllers.de.fuhsen.wrappers
 import java.net.ConnectException
 import java.util.Calendar
 import java.util.concurrent.atomic.AtomicInteger
-import javax.inject.Inject
 
+import javax.inject.Inject
 import com.typesafe.config.ConfigFactory
 import controllers.Application
 import controllers.de.fuhsen.FuhsenVocab
@@ -39,7 +39,7 @@ import play.api.libs.oauth.OAuthCalculator
 import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
 import play.api.mvc._
 import utils.dataintegration.RDFUtil._
-import utils.dataintegration.{RDFUtil, RequestMerger, UriTranslator}
+import utils.dataintegration._
 
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Future
@@ -216,7 +216,16 @@ class WrapperController @Inject()(ws: WSClient) extends Controller {
             case ApiSuccess(responseBody, nextPage, lastValue) =>
               //Logger.debug("POST-SILK:" + responseBody)
               val model = rdfStringToModel(responseBody, Lang.JSONLD.getName) //Review
-              requestMerger.addWrapperResult(model, wrapper.sourceUri)
+              Logger.info("Mayesha: "+ model.toString)
+              //convert to set of molecules
+              var molecules = MoleculeManager.convertToMolecules(model)
+              var mergedResults = MoleculeManager.convertToMolecules(requestMerger.fetchCurrentModel)
+              //apply similarity function in a bipartite mapping
+              molecules = MoleculeManager.applySimilarityMetric(molecules, mergedResults)
+              //apply fusion function
+              mergedResults = MoleculeManager.addLinkedMolecules(molecules, mergedResults)
+              //update mergedResults
+              requestMerger.addWrapperResult(MoleculeManager.convertToModel(mergedResults), wrapper.sourceUri)
             case e: ApiError =>
               Logger.error(s"Error code ${e.statusCode} in response of wrapper " + wrapper.sourceLocalName + ": " + e.errorMessage)
           }
@@ -491,33 +500,33 @@ class WrapperController @Inject()(ws: WSClient) extends Controller {
   */
 object WrapperController {
   val wrappers = Seq(
-    new GooglePlusWrapper(),
-    new TwitterWrapper(),
-    new FacebookWrapper(),
-    //Knowledge base
-    new GoogleKnowledgeGraphWrapper(),
-    //eCommerce
-    new EBayWrapper(),
-    //Darknet
-    new Tor2WebWrapper(),
-    //Linked leaks
-    new LinkedLeaksWrapper(),
-    //OCCRP
-    new OCCRPWrapper(),
-    //Xing
-    new XingWrapper(),
-    //Elastic Search
-    new ElasticSearchWrapper(),
-    //pipl
-    new PiplWrapper(),
-    //vk
-    new VkWrapper(),
-    //darknetmarkets
-    new DarknetMarketsWrapper(),
+//    new GooglePlusWrapper(),
+//    new TwitterWrapper(),
+//    new FacebookWrapper(),
+//    //Knowledge base
+//    new GoogleKnowledgeGraphWrapper(),
+//    //eCommerce
+//    new EBayWrapper(),
+//    //Darknet
+//    new Tor2WebWrapper(),
+//    //Linked leaks
+//    new LinkedLeaksWrapper(),
+//    //OCCRP
+//    new OCCRPWrapper(),
+//    //Xing
+//    new XingWrapper(),
+//    //Elastic Search
+//    new ElasticSearchWrapper(),
+//    //pipl
+//    new PiplWrapper(),
+//    //vk
+//    new VkWrapper(),
+//    //darknetmarkets
+//    new DarknetMarketsWrapper(),
     //demo wrappers
-    new AdzunaWrapper(),
-    new JoobleWrapper(),
-    new IndeedWrapper()
+    new AdzunaWrapper()
+//    new JoobleWrapper(),
+//    new IndeedWrapper()
   )
   val wrapperMap: Map[String, RestApiWrapperTrait] = wrappers.map { wrapper =>
     (wrapper.sourceLocalName, wrapper)

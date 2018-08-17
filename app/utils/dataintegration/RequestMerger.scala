@@ -100,4 +100,8 @@ class RequestMerger() {
   def serializeMergedModel(lang: Lang): String = {
     RDFUtil.modelToTripleString(mergedModel, lang)
   }
+
+  def fetchCurrentModel(): Model = {
+    mergedModel
+  }
 }
