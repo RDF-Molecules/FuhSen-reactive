@@ -4,7 +4,6 @@ import com.typesafe.config.ConfigFactory
 import org.apache.jena.rdf.model.{Model, ModelFactory, Resource, Statement}
 
 case class Molecule(uri:Resource, properties : Seq[Statement], var status : Option[LinkStatus]){
-  def this() = this("", Seq(), None)
   def addProperty(property: Statement) : Molecule = Molecule(uri, properties :+ property, status)
 }
 case class LinkStatus(link: Molecule, similarity: Double)
