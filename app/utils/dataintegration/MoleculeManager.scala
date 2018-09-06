@@ -1,10 +1,12 @@
 package utils.dataintegration
 
 import com.typesafe.config.ConfigFactory
-import org.apache.jena.rdf.model.{Model, ModelFactory}
+import org.apache.jena.rdf.model.{Model, ModelFactory, Resource, Statement}
 
-case class Molecule(uri:String, properties : Seq[Property], var status : Option[LinkStatus])
-case class Property(uri: String, value: String)
+case class Molecule(uri:Resource, properties : Seq[Statement], var status : Option[LinkStatus]){
+  def this() = this("", Seq(), None)
+  def addProperty(property: Statement) : Molecule = Molecule(uri, properties :+ property, status)
+}
 case class LinkStatus(link: Molecule, similarity: Double)
 
 trait Similarity {
@@ -13,16 +15,28 @@ trait Similarity {
 
 object MoleculeManager extends Similarity {
 
-  def convertToMolecules(model: Model) : Seq[Molecule] = {
-    val molecules : Seq[Molecule] = Seq(Molecule("uri1", Seq(Property("prop1", "val1"), Property("prop2", "val2")), None))
-
-
-
+  def convertToMolecules(model: Model): Seq[Molecule] = {
+    val subjects = model.listSubjects()
+    var molecules: Seq[Molecule] = Seq()
+    while (subjects.hasNext) {
+      val subject = subjects.nextResource()
+      var molecule = Molecule(subject, Seq(), None)
+      val properties = subject.listProperties()
+      while (properties.hasNext) {
+        val property = properties.next()
+        molecule.addProperty(property)
+      }
+      molecules = molecules :+ molecule
+    }
     molecules
   }
 
   def convertToModel(molecules : Seq[Molecule]) : Model = {
-    ModelFactory.createDefaultModel()
+    val model = ModelFactory.createDefaultModel()
+    molecules.foreach{ molecule =>
+      model.add(scala.collection.JavaConversions.seqAsJavaList(molecule.properties))
+    }
+    model
   }
 
   override def getSimilarity(m1: Molecule, m2: Molecule): Double = {
