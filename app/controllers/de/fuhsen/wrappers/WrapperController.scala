@@ -217,15 +217,19 @@ class WrapperController @Inject()(ws: WSClient) extends Controller {
               //Logger.debug("POST-SILK:" + responseBody)
               val model = rdfStringToModel(responseBody, Lang.JSONLD.getName) //Review
               Logger.info("Mayesha: "+ model.toString)
-              //convert to set of molecules
-              var molecules = MoleculeManager.convertToMolecules(model)
-              var mergedResults = MoleculeManager.convertToMolecules(requestMerger.fetchCurrentModel)
-              //apply similarity function in a bipartite mapping
-              molecules = MoleculeManager.applySimilarityMetric(molecules, mergedResults)
-              //apply fusion function
-              mergedResults = MoleculeManager.addLinkedMolecules(molecules, mergedResults)
-              //update mergedResults
-              requestMerger.addWrapperResult(MoleculeManager.convertToModel(mergedResults), wrapper.sourceUri)
+              if (!ConfigFactory.load.getBoolean("fuhsen.rdf.merge.auto.enabled"))
+                requestMerger.addWrapperResult(model, wrapper.sourceUri)
+              else {
+                //convert to set of molecules
+                var molecules = MoleculeManager.convertToMolecules(model)
+                var mergedResults = MoleculeManager.convertToMolecules(requestMerger.fetchCurrentModel)
+                //apply similarity function in a bipartite mapping
+                molecules = MoleculeManager.applySimilarityMetric(molecules, mergedResults)
+                //apply fusion function
+                mergedResults = MoleculeManager.addLinkedMolecules(molecules, mergedResults)
+                //update mergedResults
+                requestMerger.addWrapperResult(MoleculeManager.convertToModel(mergedResults), wrapper.sourceUri)
+              }
             case e: ApiError =>
               Logger.error(s"Error code ${e.statusCode} in response of wrapper " + wrapper.sourceLocalName + ": " + e.errorMessage)
           }

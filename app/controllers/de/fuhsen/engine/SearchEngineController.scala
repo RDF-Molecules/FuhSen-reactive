@@ -80,7 +80,7 @@ class SearchEngineController @Inject()(ws: WSClient) extends Controller {
             r =>
               if(!r.body.equals("NO VALID TOKEN")){
 
-                Logger.info("Stored In-Memory Graph: "+r.body)
+                //Logger.info("Stored In-Memory Graph: "+r.body)
                 GraphLogger.log(r.body) //Logging data
                 val finalModel = RDFUtil.rdfStringToModel(r.body, Lang.TURTLE)
 

@@ -363,19 +363,19 @@ var Container = React.createClass({
     },
     onFavourite: function(data){
         let url = context + '/' + this.props.searchUid + '/favorites';
-        $.ajax({
-            url: url+"?uri=" + data,
-            cache: false,
-            type: 'POST',
-            success: function(response) {
-                this.props.onAddFavourite();
-                console.log(response);
-            }.bind(this),
-            error: function(xhr) {
-                console.log("error");
-                console.log(xhr);
-            }
-        });
+        //$.ajax({
+        //    url: url+"?uri=" + data,
+        //    cache: false,
+        //    type: 'POST',
+        //    success: function(response) {
+        //        this.props.onAddFavourite();
+        //        console.log(response);
+        //    }.bind(this),
+        //    error: function(xhr) {
+        //        console.log("error");
+        //        console.log(xhr);
+        //    }
+        //});
     },
     render: function () {
         if (this.state.initData) {
@@ -2467,18 +2467,18 @@ var FavouritesHeader= React.createClass({
             let url = context + '/' + this.props.searchUid + '/favorites/count';
             let count = 0;
             var ref = this;
-            $.ajax({
-                url: url,
-                cache: false,
-                type: 'GET',
-                success: function(response) {
-                    //obj = JSON.parse(response);
-                    count = parseInt(response); //obj["@graph"].length;
-                    ref.setState({count:count, result: null});
-                },
-                error: function(xhr) {
-                }
-            });
+            //$.ajax({
+            //    url: url,
+            //    cache: false,
+            //    type: 'GET',
+            //    success: function(response) {
+            //        //obj = JSON.parse(response);
+            //        count = parseInt(response); //obj["@graph"].length;
+            //        ref.setState({count:count, result: null});
+            //    },
+            //    error: function(xhr) {
+            //    }
+            //});
             this.setState({count:count});
         }
     },
@@ -2486,18 +2486,18 @@ var FavouritesHeader= React.createClass({
         let url = context + '/' + this.props.searchUid + '/favorites/count';
         let count = 0;
         var ref = this;
-        $.ajax({
-            url: url,
-            cache: false,
-            type: 'GET',
-            success: function(response) {
-                //obj = JSON.parse(response);
-                count = parseInt(response); //obj["@graph"].length;
-                ref.setState({count:count, result: null});
-            },
-            error: function(xhr) {
-            }
-        });
+        //$.ajax({
+        //    url: url,
+        //    cache: false,
+        //    type: 'GET',
+        //    success: function(response) {
+        //        //obj = JSON.parse(response);
+        //        count = parseInt(response); //obj["@graph"].length;
+        //        ref.setState({count:count, result: null});
+        //    },
+        //    error: function(xhr) {
+        //    }
+        //});
         this.setState({count:count});
     },
     render: function(){
