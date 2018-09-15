@@ -216,7 +216,6 @@ class WrapperController @Inject()(ws: WSClient) extends Controller {
             case ApiSuccess(responseBody, nextPage, lastValue) =>
               //Logger.debug("POST-SILK:" + responseBody)
               val model = rdfStringToModel(responseBody, Lang.JSONLD.getName) //Review
-              Logger.info("Mayesha: "+ model.toString)
               if (!ConfigFactory.load.getBoolean("fuhsen.rdf.merge.auto.enabled"))
                 requestMerger.addWrapperResult(model, wrapper.sourceUri)
               else {
@@ -504,33 +503,11 @@ class WrapperController @Inject()(ws: WSClient) extends Controller {
   */
 object WrapperController {
   val wrappers = Seq(
-//    new GooglePlusWrapper(),
-//    new TwitterWrapper(),
-//    new FacebookWrapper(),
-//    //Knowledge base
-//    new GoogleKnowledgeGraphWrapper(),
-//    //eCommerce
-//    new EBayWrapper(),
-//    //Darknet
-//    new Tor2WebWrapper(),
-//    //Linked leaks
-//    new LinkedLeaksWrapper(),
-//    //OCCRP
-//    new OCCRPWrapper(),
-//    //Xing
-//    new XingWrapper(),
-//    //Elastic Search
-//    new ElasticSearchWrapper(),
-//    //pipl
-//    new PiplWrapper(),
-//    //vk
-//    new VkWrapper(),
-//    //darknetmarkets
-//    new DarknetMarketsWrapper(),
     //demo wrappers
-    new AdzunaWrapper()
-//    new JoobleWrapper(),
-//    new IndeedWrapper()
+    new AdzunaWrapper(),
+    new JoobleWrapper(),
+    new IndeedWrapper(),
+    new XingWrapper()
   )
   val wrapperMap: Map[String, RestApiWrapperTrait] = wrappers.map { wrapper =>
     (wrapper.sourceLocalName, wrapper)
