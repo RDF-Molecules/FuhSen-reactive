@@ -22,20 +22,20 @@ fs:SearchableEntity rdf:type owl:Class ;
 					rdfs:comment "Abstrakte Repräsentierung von Objekten, die während einer Suche gefunden werden können"@de ,
                                "Abstract representation of an entity that can be found during a search process"@en .
 
-foaf:Agent rdf:type owl:Class ;
-					rdfs:label "Agent"@de ,
-                             "Agent"@en ;
-					rdfs:subClassOf fs:SearchableEntity ;
-					rdfs:comment "Basisklasse für foaf:Person und org:Organization"@de ,
-                               "Agent is the base class for foaf:Person and org:Organization"@en .
+#foaf:Agent rdf:type owl:Class ;
+#					rdfs:label "Agent"@de ,
+#                             "Agent"@en ;
+#					rdfs:subClassOf fs:SearchableEntity ;
+#					rdfs:comment "Basisklasse für foaf:Person und org:Organization"@de ,
+#                               "Agent is the base class for foaf:Person and org:Organization"@en .
 
-foaf:Person rdf:type owl:Class ;
-					rdfs:label "Person"@de ,
-                             "Person"@en ;
-					fs:key "person";
-					rdfs:subClassOf foaf:Agent;
-					rdfs:comment "Represents a person"@de ,
-                               "Represents a person"@en .
+#foaf:Person rdf:type owl:Class ;
+#					rdfs:label "Person"@de ,
+#                             "Person"@en ;
+#					fs:key "person";
+#					rdfs:subClassOf foaf:Agent;
+#					rdfs:comment "Represents a person"@de ,
+#                               "Represents a person"@en .
 
 #foaf:Organization rdf:type owl:Class ;
 #					rdfs:label "Organisation"@de ,

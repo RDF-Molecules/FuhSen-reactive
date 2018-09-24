@@ -300,6 +300,11 @@ var FilterCheckList = React.createClass({
             success: function (list_data) {
                 var processed_data = [];
                 //console.log(list_data);
+
+                //Patch for the case when there is only 1 element and graph is not send.
+                if (list_data["@graph"] === undefined)
+                    list_data = JSON.parse("{ \"@graph\": [" + JSON.stringify(list_data) + "]}");
+
                 for(var k in list_data["@graph"]){
                     var current_label = list_data["@graph"][k]["rdfs:label"]
                     var current_key = list_data["@graph"][k]["fs:key"]

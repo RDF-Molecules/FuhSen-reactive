@@ -1484,7 +1484,7 @@ var ResultsContainer = React.createClass({
             documentItem = <li className="headers-li" onClick={this.props.onTypeChange} data-id="5"><p>
                 <b>{getTranslation("documents")+'(' + stat_text + ')'}</b></p></li>
         } else if (this.state.selected === "job" && jobItem !== null) {
-            documentItem = <li className="headers-li" onClick={this.props.onTypeChange} data-id="6"><p>
+            jobItem = <li className="headers-li" onClick={this.props.onTypeChange} data-id="6"><p>
                 <b>{getTranslation("jobs")+'(' + stat_text + ')'}</b></p></li>
         }
 
