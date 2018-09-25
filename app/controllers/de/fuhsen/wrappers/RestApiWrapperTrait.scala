@@ -62,4 +62,5 @@ trait RestApiWrapperTrait {
   def sourceUri = FuhsenVocab.sourceNS + sourceLocalName
 
   def requestType = "SCALA"
+
 }

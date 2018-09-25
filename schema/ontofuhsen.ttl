@@ -133,12 +133,12 @@ fs:InformationSource 	rdf:type owl:Class ;
 #                fs:finds "organization";
 #				fs:key "linkedleaks" .
 
-fs:Xing		rdf:type	fs:InformationSource;
-			rdfs:label 	"Xing";
-			fs:help_url "https://en.wikipedia.org/wiki/XING"@en,
-                   "https://de.wikipedia.org/wiki/XING"@de;
-			fs:finds "job";
-			fs:key "xing" .
+#fs:Xing		rdf:type	fs:InformationSource;
+#			rdfs:label 	"Xing";
+#			fs:help_url "https://en.wikipedia.org/wiki/XING"@en,
+#                   "https://de.wikipedia.org/wiki/XING"@de;
+#			fs:finds "job";
+#			fs:key "xing" .
 
 #fs:Occrp	rdf:type	fs:InformationSource;
 #			rdfs:label 	"OCCRP";

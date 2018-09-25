@@ -50,10 +50,10 @@ var ContainerSearch = React.createClass({
                         </div>
                         <div className="col-md-4 text-center">
                             <AccessTokenForm social_network="vk" />
-                        </div>*/}
+                        </div>
                         <div className="col-md-12 text-center">
                             <AccessTokenForm social_network="xing" />
-                        </div>
+                        </div>*/}
                     </div>
                 </div>
 

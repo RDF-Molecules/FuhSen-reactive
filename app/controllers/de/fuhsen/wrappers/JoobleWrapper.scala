@@ -27,15 +27,15 @@ class JoobleWrapper extends RestApiWrapperTrait with SilkTransformableTrait {
   override def queryParams: Map[String, String] = Map()
 
   /** Headers that should be added to the request. */
-  override def headersParams: Map[String, String] = Map()
+  override def headersParams: Map[String, String] = Map( "Content-Type" -> "application/x-www-form-urlencoded", "Accept" -> "application/json", "Content-Length" -> "17")
 
   /** Returns for a given query string the representation as query parameter for the specific API. */
   override def searchQueryAsParam(queryString: String): Map[String, String] = {
-    Map()
+    Map("q" -> queryString)
   }
 
   /** The REST endpoint URL */
-  override def apiUrl: String = ConfigFactory.load.getString("jooble.search.url")
+  override def apiUrl: String = "https://de.jooble.org/api/023840c6-11cb-47ce-8c93-be016475a3fe"
 
   /**
     * Returns the globally unique URI String of the source that is wrapped. This is used to track provenance.
@@ -58,7 +58,6 @@ class JoobleWrapper extends RestApiWrapperTrait with SilkTransformableTrait {
 
   /** The project id of the Silk project */
   override def projectId: String = ConfigFactory.load.getString("silk.socialApiProject.id")
-
 
   override def requestType: String = "POST"
 

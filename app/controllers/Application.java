@@ -26,6 +26,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.io.OutputStream;
 
 public class Application extends Controller {
 
@@ -95,6 +96,48 @@ public class Application extends Controller {
         }
 
     }
+
+    public String postRequest(String keyword, String country, String page) {
+        try
+        {
+            URL url = new URL("https://de.jooble.org/api/023840c6-11cb-47ce-8c93-be016475a3fe");
+            //System.out.println(url.toString());
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("Content-Length", "17");
+
+            String input = "{keywords:'"+keyword+"',page:'"+ page +"'}";
+
+            OutputStream os = conn.getOutputStream();
+            os.write(input.getBytes());
+            os.flush();
+
+            if (conn.getResponseCode() != 200) {
+                //return ok("NOT OK "+conn.getResponseCode()+" "+conn.getResponseMessage());
+                return "NOT OK "+conn.getResponseCode()+" "+conn.getResponseMessage();
+            }
+            else {
+                BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream()), "UTF-8"));
+
+                String finalOutput = "";
+                String output;
+                System.out.println("Output from Server .... \n");
+                while ((output = br.readLine()) != null) {
+                    finalOutput += output;
+                }
+
+                conn.disconnect();
+                //System.out.println(finalOutput);
+                //return ok("OK "+finalOutput);
+                return finalOutput;
+            }
+            //}catch(Exception e) { return ok("NOT OK Exception "+e.getMessage()); }
+        }catch(Exception e) { return "NOT OK Exception "+e.getMessage(); }
+
+    }
+
 }
 
 

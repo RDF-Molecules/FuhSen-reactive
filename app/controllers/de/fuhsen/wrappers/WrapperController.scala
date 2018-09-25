@@ -135,31 +135,37 @@ class WrapperController @Inject()(ws: WSClient) extends Controller {
   private def executeApiRequest(wrapper: RestApiWrapperTrait,
                                         request: WSRequest) : Future[ApiResponse] = {
 
-    if(!wrapper.requestType.equals("JAVA"))
-      request.withRequestTimeout(ConfigFactory.load.getLong("fuhsen.wrapper.request.timeout"))
-          .get.map(convertToApiResponse("Wrapper or the wrapped service", Some(wrapper), Some(request.url))) //Add here the original API URI
-        .recover {
-        case e: ConnectException =>
-          Logger.warn("Connection Exception during wrapper execution: "+e.getMessage)
-          ApiError(INTERNAL_SERVER_ERROR, e.getMessage)
-        case e: Exception =>
-          Logger.warn(s"Generic Exception during wrapper execution ${e.getMessage}")
-          ApiError(INTERNAL_SERVER_ERROR, e.getMessage)
-      }
+    if(wrapper.requestType.equals("jooble")){
+      Logger.info("POST wrapper request")
+      null
+    }
     else {
-      wrapper match {
-        case oAuthWrapper: RestApiOAuthTrait =>
-          Logger.info("Using JAVA impl to call the rest api")
-          val bodyJava = Future(new Application().javaRequest(oAuthWrapper, request.url))
-          bodyJava.map{ b =>
-            if (b.startsWith("NOT OK")) {
-              val erroDetails = b.split("-")
-              ApiError(erroDetails(1).toInt,erroDetails(2))
+      if(!wrapper.requestType.equals("JAVA"))
+        request.withRequestTimeout(ConfigFactory.load.getLong("fuhsen.wrapper.request.timeout"))
+          .get.map(convertToApiResponse("Wrapper or the wrapped service", Some(wrapper), Some(request.url))) //Add here the original API URI
+          .recover {
+          case e: ConnectException =>
+            Logger.warn("Connection Exception during wrapper execution: "+e.getMessage)
+            ApiError(INTERNAL_SERVER_ERROR, e.getMessage)
+          case e: Exception =>
+            Logger.warn(s"Generic Exception during wrapper execution ${e.getMessage}")
+            ApiError(INTERNAL_SERVER_ERROR, e.getMessage)
+        }
+      else {
+        wrapper match {
+          case oAuthWrapper: RestApiOAuthTrait =>
+            Logger.info("Using JAVA impl to call the rest api")
+            val bodyJava = Future(new Application().javaRequest(oAuthWrapper, request.url))
+            bodyJava.map{ b =>
+              if (b.startsWith("NOT OK")) {
+                val erroDetails = b.split("-")
+                ApiError(erroDetails(1).toInt,erroDetails(2))
+              }
+              else
+                ApiSuccess(b)
             }
-            else
-              ApiSuccess(b)
-          }
-        case _ => Future(ApiError(INTERNAL_SERVER_ERROR, "Not correct wrapper definition"))
+          case _ => Future(ApiError(INTERNAL_SERVER_ERROR, "Not correct wrapper definition"))
+        }
       }
     }
   }
@@ -168,7 +174,16 @@ class WrapperController @Inject()(ws: WSClient) extends Controller {
   private def transformApiResponse(wrapper: RestApiWrapperTrait,
                                    apiResponse: Future[ApiResponse]): Future[ApiResponse] = {
 
-    apiResponse.flatMap {
+    if(wrapper.sourceLocalName.equals("jooble")) {
+      Logger.info("POST wrapper request")
+      //request.withRequestTimeout(ConfigFactory.load.getLong("fuhsen.wrapper.request.timeout"))
+      //  .post(wrapper.body).map(convertToApiResponse("Wrapper or the wrapped service", Some(wrapper), Some(request.url)))
+      val joobleResponse = new Application().postRequest("machine learning", "de", "1")
+      //Logger.debug("PRE-SILK (JOOBLE): "+joobleResponse )
+      handleSilkTransformation(wrapper, joobleResponse.replace("\\r", ""), None)
+    }
+    else {
+      apiResponse.flatMap {
         case error: ApiError =>
           // There has been an error previously, don't go on.
           Future(error)
@@ -184,6 +199,7 @@ class WrapperController @Inject()(ws: WSClient) extends Controller {
             handleSilkTransformation(wrapper, body, nextPage)
           }
       }
+    }
   }
 
   private def addProvMetaData(wrapper: RestApiWrapperTrait, apiResponse: Future[ApiResponse]) :  Future[ApiSuccess] = {
@@ -384,6 +400,7 @@ class WrapperController @Inject()(ws: WSClient) extends Controller {
         Logger.info("Execute Silk Transformations")
         val lang = acceptTypeToRdfLang(acceptType)
         try {
+          //Logger.info("Executing transformation with content: "+content)
           val futureResponses = executeTransformation(content, acceptType, silkTransform)
           val rdf = convertToRdf(lang, futureResponses)
           rdf.map(content => ApiSuccess(content, nextPage))

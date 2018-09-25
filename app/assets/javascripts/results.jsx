@@ -1529,9 +1529,9 @@ var ResultsContainer = React.createClass({
         }
 
         var automaticMerge = <div></div>;
-        if(autoMergeEnabled){
-            automaticMerge = <CustomForm id="btn_merge" class_identifier="merge_icon" func={this.mergeAll}/>
-        }
+        //if(autoMergeEnabled){
+        //    automaticMerge = <CustomForm id="btn_merge" class_identifier="merge_icon" func={this.mergeAll}/>
+        //}
 
         var graphView = null;
         if(graphViewEnabled){
