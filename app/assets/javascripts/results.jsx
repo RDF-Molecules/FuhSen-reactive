@@ -1381,6 +1381,8 @@ var ResultsContainer = React.createClass({
 
         var final_data = this.state.resultsData;
 
+        console.log(final_data);
+
         //Facets filtering algorithm
         if (Object.keys(this.props.facetsDict).length > 0) {
             final_data = this.state.originalData

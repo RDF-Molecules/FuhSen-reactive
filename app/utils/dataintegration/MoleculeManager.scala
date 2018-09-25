@@ -13,9 +13,8 @@ trait Similarity {
 }
 
 object MoleculeManager extends Similarity {
-
   def convertToMolecules(model: Model): Seq[Molecule] = {
-    val subjects = model.listSubjects()
+    val subjects = model.listSubjectsWithProperty(ResourceFactory.createProperty("http://vocab.lidakra.de/fuhsen#source"))
     var molecules: Seq[Molecule] = Seq()
     while (subjects.hasNext) {
       molecules = molecules :+ Molecule(subjects.nextResource(), None)
@@ -32,9 +31,9 @@ object MoleculeManager extends Similarity {
   }
 
   override def getSimilarity(m1: Molecule, m2: Molecule): Double = {
-    1/distance(m1.uri.getURI, m2.uri.getURI)
+    //1/distance(m1.uri.getURI, m2.uri.getURI)
     ////random similarity method for testing
-    //scala.util.Random.nextFloat()
+    scala.util.Random.nextFloat()
   }
 
   /*
@@ -59,6 +58,7 @@ object MoleculeManager extends Similarity {
         var similarity = MoleculeManager.getSimilarity(molecule, resultMolecule)
         if(similarity > ConfigFactory.load.getDouble("merge.similarity.threshold")){
           if(molecule.status.isEmpty || (molecule.status.isDefined && molecule.status.get.similarity < similarity)){
+            Logger.info("Similar molecules! " + molecule.uri.getURI + " and " + resultMolecule.uri.getURI )
             //store the molecule link with highest similarity value
             molecule.status = Some(LinkStatus(resultMolecule, similarity))
           }
@@ -75,6 +75,7 @@ object MoleculeManager extends Similarity {
       moleculesWithLinks
     }
     else{
+      Logger.info("Other wrappers")
       var datamap = Map(currentMoleculeSet map { m => m.uri -> m }: _*)
       moleculesWithLinks.foreach{ molecule =>
         if(molecule.status.isDefined){
@@ -93,7 +94,7 @@ object MoleculeManager extends Similarity {
 
   def merge(m1: Molecule, m2: Molecule, fusionPolicy : String) : Molecule = {
     val uid = "http://vocab.lidakra.de/minte/merged_entity/" + java.util.UUID.randomUUID.toString
-    val uris = Array(m1.uri.getURI, m2.uri.getURI)
+    val uris = (m1.uri.getURI, m2.uri.getURI)
     val mergedMolecule1 = ResourceUtils.renameResource(m1.uri, uid)
     val mergedMolecule2 = ResourceUtils.renameResource(m2.uri, uid)
     val it = mergedMolecule2.listProperties()
@@ -101,7 +102,8 @@ object MoleculeManager extends Similarity {
       val prop = it.nextStatement()
       mergedMolecule1.addProperty(prop.getPredicate, prop.getObject)
     }
-    mergedMolecule1.addProperty(ResourceFactory.createProperty("http://vocab.lidakra.de/minte/origin"), uris.toString)
+    mergedMolecule1.addProperty(ResourceFactory.createProperty("http://vocab.lidakra.de/fuhsen/origin"), uris._1)
+    mergedMolecule1.addProperty(ResourceFactory.createProperty("http://vocab.lidakra.de/fuhsen/origin"), uris._2)
     val merged = Molecule(mergedMolecule1, None)
     merged
   }
