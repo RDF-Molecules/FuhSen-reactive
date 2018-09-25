@@ -14,7 +14,7 @@ trait Similarity {
 
 object MoleculeManager extends Similarity {
   def convertToMolecules(model: Model): Seq[Molecule] = {
-    val subjects = model.listSubjectsWithProperty(ResourceFactory.createProperty("http://vocab.lidakra.de/fuhsen#source"))
+    val subjects = model.listSubjectsWithProperty(ResourceFactory.createProperty("http://schema.org/source"))
     var molecules: Seq[Molecule] = Seq()
     while (subjects.hasNext) {
       molecules = molecules :+ Molecule(subjects.nextResource(), None)
@@ -31,9 +31,14 @@ object MoleculeManager extends Similarity {
   }
 
   override def getSimilarity(m1: Molecule, m2: Molecule): Double = {
-    //1/distance(m1.uri.getURI, m2.uri.getURI)
-    ////random similarity method for testing
-    scala.util.Random.nextFloat()
+    val title_1 = m1.uri.getProperty(ResourceFactory.createProperty("http://schema.org/title")).getString
+    val title_2 = m2.uri.getProperty(ResourceFactory.createProperty("http://schema.org/title")).getString
+    val maxVal = math.max(title_1.length, title_2.length)
+    val minVal = math.abs(title_1.length - title_2.length)
+    val dist = (distance(title_1, title_2) - minVal).toFloat /  (maxVal - minVal)
+    1 - dist
+//    ////random similarity method for testing
+//    //scala.util.Random.nextFloat()
   }
 
   /*
@@ -84,7 +89,7 @@ object MoleculeManager extends Similarity {
           datamap = datamap + (mergedMolecule.uri -> mergedMolecule)
         }
         else{
-          datamap + (molecule.uri -> molecule)
+          datamap = datamap + (molecule.uri -> molecule)
         }
       }
       val merged = datamap.values.toSeq
