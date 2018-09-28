@@ -31,17 +31,23 @@ object MoleculeManager extends Similarity {
   }
 
   override def getSimilarity(m1: Molecule, m2: Molecule): Double = {
-    val titleProperty = ResourceFactory.createProperty("http://schema.org/title")
-    if (m1.uri.hasProperty(titleProperty) && m2.uri.hasProperty(titleProperty)) {
-      val title_1 = m1.uri.getProperty(titleProperty).getObject.toString
-      val title_2 = m2.uri.getProperty(titleProperty).getObject.toString
-      val maxVal = math.max(title_1.length, title_2.length)
-      val minVal = math.abs(title_1.length - title_2.length)
-      val dist = (distance(title_1, title_2) - minVal).toFloat / (maxVal - minVal)
-      1 - dist
-    }
-    else {
-      0.0
+    ConfigFactory.load.getString("merge.similarity.metric") match {
+        case "random" => scala.util.Random.nextFloat()
+        case "label" => {
+          val titleProperty = ResourceFactory.createProperty("http://schema.org/title")
+          if (m1.uri.hasProperty(titleProperty) && m2.uri.hasProperty(titleProperty)) {
+            val title_1 = m1.uri.getProperty(titleProperty).getObject.toString
+            val title_2 = m2.uri.getProperty(titleProperty).getObject.toString
+            val maxVal = math.max(title_1.length, title_2.length)
+            val minVal = math.abs(title_1.length - title_2.length)
+            val dist = (distance(title_1, title_2) - minVal).toFloat / (maxVal - minVal)
+            1 - dist
+          }
+          else {
+            0.0
+          }
+        }
+        case _ => 0.0
     }
   }
 

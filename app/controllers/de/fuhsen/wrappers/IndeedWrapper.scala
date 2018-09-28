@@ -33,11 +33,11 @@ class IndeedWrapper extends RestApiWrapperTrait with SilkTransformableTrait {
     "st" -> "",
     "jt" -> "",
     //"start" -> "",
-    "limit" -> "5",
+    "limit" -> ConfigFactory.load.getString("indeed.search.top"),
     "fromage" -> "",
     "filter" -> "",
     "latlong" -> "",
-    //"co" -> "de",
+    "co" -> "de",
     "chnl" -> "",
     "userip" -> "1.2.3.4",
     "v" -> "2")

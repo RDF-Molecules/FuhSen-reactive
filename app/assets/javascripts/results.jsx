@@ -36,9 +36,12 @@ function compareRank(a, b) {
     return 0;
 }
 
-function getValue(property) {
+function getValue(property, allValues) {
     if(Array.isArray(property)){
-        return property[0];
+        if(allValues)
+            return property.join(". ");
+        else
+            return property[0];
     }
     else
         return property;
@@ -1224,7 +1227,7 @@ var ResultsContainer = React.createClass({
                     if (data_to_handle["@graph"] !== undefined)
                         data_to_handle = data_to_handle["@graph"].sort(compareRank);
                     else {
-                        if (data_to_handle["fs:source"] !== undefined) {
+                        if (data_to_handle["sdo:source"] !== undefined) {
                             data_to_handle = JSON.parse("{ \"@graph\": [" + JSON.stringify(data) + "]}");
                             data_to_handle = data_to_handle["@graph"].sort(compareRank);
                         }
@@ -1388,7 +1391,7 @@ var ResultsContainer = React.createClass({
             final_data = this.state.originalData
             for (var key in this.props.facetsDict) {
                 if (this.props.facetsDict.hasOwnProperty(key)) {
-                    var facet_name = "fs:" + key
+                    var facet_name = "sdo:" + key
                     var facet_values = this.props.facetsDict[key]
 
                     function containsAll(source, target) {
@@ -2206,22 +2209,22 @@ var DocumentResultElement = React.createClass({
 
 var JobResultElement = React.createClass({
     render: function () {
+        var detailsPageUri = context + "/details?entityType=person" + "&eUri=" + this.props.uri + "&uid=" + this.props.uid;
+
         return (
             <li className="item bt">
                 <div className="summary row">
                     <div className="summary-main-wrapper col-md-10">
                         <div className="summary-main">
-                            <h2 className="title">
-                                {this.props.label}
-                            </h2>
+                            <LabelElement name={this.props.label} pageUrl={detailsPageUri} />
                             <div className="subtitle">
-                                { this.props.comment !== undefined ? <p>{this.props.comment}</p> : null }
+                                { this.props.comment !== undefined ? <p>{getValue(this.props.comment, false)}</p> : null }
                                 { this.props.datePosted !== undefined ?
-                                    <p>{getTranslation("datePosted")}: {this.props.datePosted}</p> : null }
+                                    <p>{getTranslation("datePosted")}: {getValue(this.props.datePosted, true)}</p> : null }
                                 { this.props.organization !== undefined ?
-                                    <p>{getTranslation("hiringOrganization")}: {this.props.organization}</p> : null }
+                                    <p>{getTranslation("hiringOrganization")}: {getValue(this.props.organization, true)}</p> : null }
                                 { this.props.location !== undefined ?
-                                    <p>{getTranslation("jobLocation")}: {this.props.location}</p> : null }
+                                    <p>{getTranslation("jobLocation")}: {getValue(this.props.location, true)}</p> : null }
                                 <LinkElement webpage={this.props.webpage} />
                             </div>
                         </div>
@@ -2530,21 +2533,21 @@ var ThumbnailElement = React.createClass({
                 var imgArr = this.props.img;
                 if (Array.isArray(imgArr)) {
                     var imgList = imgArr.map(function (img, index) {
-                        var imgVal = getValue(img);
+                        var imgVal = getValue(img, false);
                         if(this.props.isDoc !== undefined && this.props.isDoc == true) imgVal = context + "/assets/images/icons/" + imgVal + ".png";
                         return (<li><img src={imgVal} height="60px" width="75px"/></li>)
                     }.bind(this));
                     return (<div className="flexslider"><ul className="slides">{imgList}</ul></div>)
                 }
                 else {
-                    var imgVal = getValue(imgArr);
+                    var imgVal = getValue(imgArr, false);
                     if(this.props.isDoc !== undefined && this.props.isDoc == true) imgVal = context + "/assets/images/icons/" + imgVal + ".png";
                     return <img src={imgVal} height="60px" width="75px"></img>
                 }
             }
             else {
                 //single result
-                var imgVal = getValue(this.props.img);
+                var imgVal = getValue(this.props.img, false);
                 if(this.props.isDoc !== undefined && this.props.isDoc == true) imgVal = context + "/assets/images/icons/" + imgVal + ".png";
                 return <img src={imgVal} height="60px" width="75px"></img>
             }
@@ -2598,7 +2601,7 @@ var SourceElement = React.createClass({
 
 var LabelElement = React.createClass({
     render: function() {
-        var singleName = getValue(this.props.name);
+        var singleName = getValue(this.props.name, false);
         return <a href={this.props.pageUrl} target="_blank"><h2 className="title">{singleName}</h2></a>;
     }
 });

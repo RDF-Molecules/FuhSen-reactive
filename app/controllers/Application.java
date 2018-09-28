@@ -19,6 +19,7 @@ import controllers.de.fuhsen.wrappers.RestApiWrapperTrait;
 import controllers.de.fuhsen.wrappers.security.RestApiOAuthTrait;
 import controllers.de.fuhsen.wrappers.security.TokenManager;
 import play.mvc.*;
+import play.Play;
 import views.html.*;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
@@ -100,7 +101,7 @@ public class Application extends Controller {
     public String postRequest(String keyword, String country, String page) {
         try
         {
-            URL url = new URL("https://de.jooble.org/api/023840c6-11cb-47ce-8c93-be016475a3fe");
+            URL url = new URL(Play.application().configuration().getString("jooble.search.api_key.de"));
             //System.out.println(url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
