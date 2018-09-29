@@ -33,7 +33,7 @@
 # Pull base image
 #FROM ubuntu:15.04
 FROM ubuntu
-MAINTAINER Luigi Selmi <luigiselmi@gmail.com>
+MAINTAINER Diego Collarana Vargas <Diego.Collarana.Vargas@iais.fraunhofer.de>
 
 #RUN apt-get update && apt-get -y install locales
 RUN locale-gen en_US.UTF-8
@@ -64,24 +64,39 @@ RUN apt-get update && \
 RUN apt-get update && \
     apt-get install -y vim
 
-# Copy OCCRP SSL Certificate
-COPY  certs/dataoccrporg.crt $JAVA_HOME/jre/lib/security/
+# Install git
+RUN apt install -y git
 
-# Install the OCCRP SSL certificate
-WORKDIR $JAVA_HOME/jre/lib/security/
-RUN keytool -importcert -alias occrp -keystore cacerts -storepass changeit -file dataoccrporg.crt -noprompt
+# Install sbt
+ENV SBT_VERSION 0.13.15
 
-#Install Fuhsen package from the project folder (create a package using "sbt universal:package-zip-tarball" command)
-COPY target/universal/fuhsen-1.1.0.tgz /home/lidakra/
-WORKDIR /home/lidakra/
-RUN tar xvf fuhsen-1.1.0.tgz  
+RUN apt-get update && \
+	apt-get install -y curl
 
+RUN \
+  curl -L -o sbt-$SBT_VERSION.deb http://dl.bintray.com/sbt/debian/sbt-$SBT_VERSION.deb && \
+  dpkg -i sbt-$SBT_VERSION.deb && \
+  rm sbt-$SBT_VERSION.deb && \
+  apt-get update && \
+  apt-get install sbt && \
+  sbt sbtVersion
+
+# Copy repository
+COPY ./ /minte/
+
+WORKDIR /minte/
+RUN sbt universal:packageZipTarball
+
+#Install MINTE package from the project folder (create a package using "sbt universal:package-zip-tarball" command)
+WORKDIR /minte/target/universal/
+RUN tar xvf minte-1.1.0.tgz
 
 # Copy the schema folder (as sbt universal package does not include it by default)
-COPY schema/ /home/lidakra/fuhsen-1.1.0/schema/
+WORKDIR /minte/
+COPY schema/ /minte/target/universal/minte-1.1.0/schema/
+COPY start_minte.sh /minte/target/universal
+WORKDIR /minte/target/universal
 
-# Start Fuhsen
-COPY start_fuhsen.sh /home/lidakra/fuhsen-1.1.0
-WORKDIR /home/lidakra/fuhsen-1.1.0
-RUN ["chmod", "u+x", "start_fuhsen.sh"]
-CMD ./start_fuhsen.sh
+# Start MINTE
+RUN ["chmod", "u+x", "start_minte.sh"]
+CMD ./start_minte.sh

@@ -1,4 +1,4 @@
-name := """fuhsen"""
+name := """minte"""
 
 version := "1.1.0"
 
