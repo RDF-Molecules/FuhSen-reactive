@@ -1771,6 +1771,7 @@ var ResultsList = React.createClass({
                         location={result["sdo:jobLocation"]}
                         organization={result["sdo:hiringOrganization"]}
                         source={result["sdo:source"]}
+                        uid = {this.props.searchUid}
                         onAddLink={this.props.onAddLink}
                         onFavourite={this.props.onFavourite}>
                     </JobResultElement>
@@ -2209,7 +2210,7 @@ var DocumentResultElement = React.createClass({
 
 var JobResultElement = React.createClass({
     render: function () {
-        var detailsPageUri = context + "/details?entityType=person" + "&eUri=" + this.props.uri + "&uid=" + this.props.uid;
+        var detailsPageUri = context + "/details?entityType=job" + "&eUri=" + this.props.uri + "&uid=" + this.props.uid;
 
         return (
             <li className="item bt">

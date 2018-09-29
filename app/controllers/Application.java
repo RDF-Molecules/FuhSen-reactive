@@ -101,7 +101,7 @@ public class Application extends Controller {
     public String postRequest(String keyword, String country, String page) {
         try
         {
-            URL url = new URL(Play.application().configuration().getString("jooble.search.api_key.de"));
+            URL url = new URL(Play.application().configuration().getString("jooble.search.url"));
             //System.out.println(url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);

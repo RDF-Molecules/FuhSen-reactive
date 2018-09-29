@@ -37,7 +37,7 @@ class IndeedWrapper extends RestApiWrapperTrait with SilkTransformableTrait {
     "fromage" -> "",
     "filter" -> "",
     "latlong" -> "",
-    "co" -> "de",
+    //"co" -> "de",
     "chnl" -> "",
     "userip" -> "1.2.3.4",
     "v" -> "2")

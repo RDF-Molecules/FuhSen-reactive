@@ -19,7 +19,10 @@
           data-merge="@play.Play.application().configuration().getString("fuhsen.rdf.merge.enabled")"
           data-automerge="@play.Play.application().configuration().getString("fuhsen.rdf.merge.auto.enabled")"
           data-export="@play.Play.application().configuration().getString("fuhsen.rdf.export.type")"
-          data-graphview="@play.Play.application().configuration().getString("fuhsen.view.graph.enabled")">
+          data-graphview="@play.Play.application().configuration().getString("fuhsen.view.graph.enabled")"
+        data-fusion="@play.Play.application().configuration().getString("merge.fusion.policy")"
+        data-threshold="@play.Play.application().configuration().getString("merge.similarity.threshold")"
+        data-similarity="@play.Play.application().configuration().getString("merge.similarity.metric")">
         <noscript>
             <div class="container">
                 <div class="row">

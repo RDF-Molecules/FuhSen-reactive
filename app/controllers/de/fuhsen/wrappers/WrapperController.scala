@@ -230,7 +230,7 @@ class WrapperController @Inject()(ws: WSClient) extends Controller {
         for ((wrapperResult, wrapper) <- results.zip(wrappers.flatten)) {
           wrapperResult match {
             case ApiSuccess(responseBody, nextPage, lastValue) =>
-              //Logger.debug("POST-SILK:" + responseBody)
+              //Logger.info("POST-SILK:" + responseBody)
               val model = rdfStringToModel(responseBody, Lang.JSONLD.getName) //Review
               if (!ConfigFactory.load.getBoolean("fuhsen.rdf.merge.auto.enabled"))
                 requestMerger.addWrapperResult(model, wrapper.sourceUri)

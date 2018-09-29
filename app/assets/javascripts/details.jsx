@@ -1,4 +1,7 @@
 var context = $('body').data('context');
+var fusion = $('body').data('fusion');
+var threshold = $('body').data('threshold');
+var similarity = $('body').data('similarity');
 
 function getValue(property) {
     if(Array.isArray(property)){
@@ -40,7 +43,7 @@ var ProfileContainer = React.createClass({
             <div className="container">
                 <div className="row" id="header-main-row">
                  <div id ="profile_container">
-                            <ProfileHeader image={this.state.data !== undefined ? (this.state.data["image"] !== undefined ? this.state.data["image"] : this.state.data["fs:image"]) : undefined} name={this.state.data !== undefined ? this.state.data["fs:title"] : undefined}/>
+                            <ProfileHeader image={this.state.data !== undefined ? (this.state.data["source"] !== undefined ? this.state.data["source"] : this.state.data["fs:source"]) : undefined} name={this.state.data !== undefined ? this.state.data["fs:title"] : undefined}/>
                             <ProfileBody data = {this.state.data}/>
                     </div>
                 </div>
@@ -56,13 +59,27 @@ var ProfileHeader = React.createClass({
         return (
             <div id="profile_container_top">
                 <div id="profile_image">
-                    <img className="thumbnail" src={singleImg} width="90" height="90"/>
+                    <img src={context + "/assets/images/datasources/" + this.props.image + ".png"} width="45" height="45"/>
                 </div>
                 <div id="profile_summary">
                     <div className="header">
                         <span className="highlight">
                             {singleName}
                         </span>
+                    </div>
+                    <div className="field_label">
+                        <div className="hidden-xs hidden-sm">
+                            <span>The following parameters were used to create this RDF-Molecule: </span>
+                        </div>
+                        <div className="hidden-xs hidden-sm">
+                            <span>Fusion Policy: <b>{fusion}</b></span>
+                        </div>
+                        <div className="hidden-xs hidden-sm">
+                            <span>Threshold: <b>{threshold}</b></span>
+                        </div>
+                        <div className="hidden-xs hidden-sm">
+                            <span>Similarity Function: <b>{similarity}</b></span>
+                        </div>
                     </div>
                 </div>
             </div>

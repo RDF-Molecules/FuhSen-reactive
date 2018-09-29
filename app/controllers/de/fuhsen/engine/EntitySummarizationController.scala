@@ -1,7 +1,8 @@
 package controllers.de.fuhsen.engine
 
+import akka.event.Logging
 import play.Logger
-import play.api.mvc.{AnyContent, Action, Controller}
+import play.api.mvc.{Action, AnyContent, Controller}
 import org.apache.jena.query.{QueryExecutionFactory, QueryFactory}
 import org.apache.jena.riot.Lang
 import utils.dataintegration.RDFUtil
@@ -17,7 +18,7 @@ class EntitySummarizationController extends Controller {
       Ok(textBody.get)
   }
   def summarizeEntity(uid: String, entityType: String, uri: String) = Action {
-
+    Logger.info("Executing summarizeEntity")
     GraphResultsCache.getModel(uid) match {
       case Some(model) =>
         val query = entityType match {
@@ -89,7 +90,6 @@ class EntitySummarizationController extends Controller {
                  |OPTIONAL { <$uri> fs:condition ?condition } .
                  |}
                  """.stripMargin)
-
           case "organization" =>
             QueryFactory.create(
               s"""
@@ -116,9 +116,37 @@ class EntitySummarizationController extends Controller {
                  |FILTER(isLiteral(?o)) }
                  |}
                    """.stripMargin)
+          case "job" =>
+            QueryFactory.create(
+              s"""
+                 |PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                 |PREFIX fs: <http://vocab.lidakra.de/fuhsen#>
+                 |PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                 |PREFIX sdo: <http://schema.org/>
+                 |PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+                 |
+                 |CONSTRUCT   {
+                 |<$uri> ?p ?o .
+                 |<$uri> rdf:type fs:Job .
+                 |<$uri> fs:title ?name .
+                 |<$uri> fs:image ?img .
+                 |<$uri> fs:url ?url .
+                 |<$uri> fs:source ?source .
+                 |}
+                 |WHERE {
+                 |<$uri> rdf:type fs:Job .
+                 |<$uri> sdo:title ?name .
+                 |<$uri> sdo:source ?source .
+                 |OPTIONAL {<$uri> fs:url ?url } .
+                 |OPTIONAL { <$uri> fs:img ?img } .
+                 |OPTIONAL { <$uri> ?p ?o .
+                 |FILTER(isLiteral(?o)) }
+                 |}
+                   """.stripMargin)
         }
         val results_model = QueryExecutionFactory.create(query, model).execConstruct()
-        Ok(RDFUtil.modelToTripleString(results_model, Lang.JSONLD))
+        val response = RDFUtil.modelToTripleString(results_model, Lang.JSONLD)
+        Ok(response)
       case None =>
         InternalServerError(
           "The provided UID has not a model associated in the cache.")
