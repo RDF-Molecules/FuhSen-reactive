@@ -3,5 +3,5 @@
 find . -type f -name RUNNING_PID -exec rm -f {} \;
 
 # Start Minte
-./bin/minte
+./minte-1.1.0/bin/minte
 
