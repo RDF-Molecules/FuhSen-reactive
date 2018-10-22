@@ -71,3 +71,5 @@ GET    /graphVowlJSON                                      controllers.de.fuhsen
 
 # Conversion services
 POST   /conversion/exportToExcel                           controllers.de.fuhsen.engine.RdfGraphController.exportToExcel()
+
+GET    /fca                                                utils.dataintegration.FCAUtil.applyFCA()
