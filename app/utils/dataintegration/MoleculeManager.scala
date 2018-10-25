@@ -117,8 +117,10 @@ object MoleculeManager extends Similarity {
       val prop = it.nextStatement()
       mergedMolecule1.addProperty(prop.getPredicate, prop.getObject)
     }
-    mergedMolecule1.addProperty(ResourceFactory.createProperty("http://vocab.lidakra.de/fuhsen/origin"), uris._1)
-    mergedMolecule1.addProperty(ResourceFactory.createProperty("http://vocab.lidakra.de/fuhsen/origin"), uris._2)
+    if(fusionPolicy.equals("union")){
+      mergedMolecule1.addProperty(ResourceFactory.createProperty("http://vocab.lidakra.de/fuhsen/origin"), uris._1)
+      mergedMolecule1.addProperty(ResourceFactory.createProperty("http://vocab.lidakra.de/fuhsen/origin"), uris._2)
+    }
     val merged = Molecule(mergedMolecule1, None)
     merged
   }
